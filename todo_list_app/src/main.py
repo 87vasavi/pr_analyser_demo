@@ -23,3 +23,10 @@ def retrieve_task(task_id: int):
 def create_task(title: str, description: str):
     task = add_task(title, description)
     return task
+
+@app.put("/tasks/", tags=["Tasks"])
+def modify_task(task_id: int, title: str, description: str, status: TaskStatus):
+    task = update_task(task_id, title, description, status)
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+    return task
