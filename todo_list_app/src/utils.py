@@ -16,3 +16,6 @@ def get_task(task_id: int):
 
 def get_all_tasks():
     return list(task_db.values())
+
+def delete_task(task_id: int):
+    return task_db.pop(task_id, None)
