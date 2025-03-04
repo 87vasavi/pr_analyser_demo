@@ -16,3 +16,12 @@ def get_task(task_id: int):
 
 def get_all_tasks():
     return list(task_db.values())
+
+
+def update_task(task_id: int, title: str, description: str, status: TaskStatus):
+    if task_id not in task_db:
+        return None
+    task_db[task_id].title = title
+    task_db[task_id].description = description
+    task_db[task_id].status = status
+    return task_db[task_id]
