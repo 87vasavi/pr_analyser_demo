@@ -21,5 +21,8 @@ def retrieve_task(task_id: int):
 
 @app.post("/tasks", tags=["Tasks"])
 def create_task(title: str, description: str):
+    if len(description) > 150:
+        raise HTTPException(status_code=400, detail="Description cannot exceed 150 characters.")
+    
     task = add_task(title, description)
     return task
