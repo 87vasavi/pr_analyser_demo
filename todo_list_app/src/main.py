@@ -26,3 +26,25 @@ def create_task(title: str, description: str):
     
     task = add_task(title, description)
     return task
+
+@app.post("/tasks/{task_id}/subtasks/", response_model=Subtask)
+def create_subtask(task_id: int, title: str, session: Session = Depends(get_session)):
+    task = session.get(Task, task_id)
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+
+    subtask = Subtask(title=title, task_id=task_id)
+    session.add(subtask)
+    session.commit()
+    session.refresh(subtask)
+    return subtask
+
+@app.patch("/subtasks/{subtask_id}/complete/")
+def complete_subtask(subtask_id: int, session: Session = Depends(get_session)):
+    subtask = session.get(Subtask, subtask_id)
+    if not subtask:
+        raise HTTPException(status_code=404, detail="Subtask not found")
+
+    subtask.completed = True
+    session.commit()
+    return {"message": "Subtask marked as completed"}
