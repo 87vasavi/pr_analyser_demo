@@ -16,3 +16,6 @@ def get_task(task_id: int):
 
 def get_all_tasks():
     return list(task_db.values())
+
+def add_tasks(task1, task2):
+    return task1+task2
