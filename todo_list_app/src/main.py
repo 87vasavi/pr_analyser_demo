@@ -1,50 +1,27 @@
-from fastapi import FastAPI, HTTPException
-from src.models import Task, TaskStatus
-from src.utils import add_task, get_task, get_all_tasks
+from sqlmodel import SQLModel, Field, Relationship
+from pydantic import BaseModel
+from datetime import date
+from typing import Optional, List
+from enum import Enum
 
-app = FastAPI(title="Task Management API", description="API for managing tasks")
+class TaskStatus(str, Enum):
+    pending = "pending"
+    in_progress = "in_progress"
+    completed = "completed"
 
-@app.get("/")
-def health_check():
-    return {"status": "Task Management API is running"}
+class Task(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    title: str
+    description: Optional[str] = Field(None, max_length=150)
+    status: TaskStatus = TaskStatus.pending
+    due_date: Optional[date] = None  # ➕ Added due_date field
 
-@app.get("/tasks", tags=["Tasks"])
-def list_tasks():
-    return get_all_tasks()
+    subtasks: List["Subtask"] = Relationship(back_populates="task")
 
-@app.get("/tasks/{task_id}", tags=["Tasks"])
-def retrieve_task(task_id: int):
-    task = get_task(task_id)
-    if not task:
-        raise HTTPException(status_code=404, detail="Task not found")
-    return task
+class Subtask(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    task_id: int = Field(foreign_key="task.id")
+    title: str
+    completed: bool = False
 
-@app.post("/tasks", tags=["Tasks"])
-def create_task(title: str, description: str):
-    if len(description) > 150:
-        raise HTTPException(status_code=400, detail="Description cannot exceed 150 characters.")
-    
-    task = add_task(title, description)
-    return task
-
-@app.post("/tasks/{task_id}/subtasks/", response_model=Subtask)
-def create_subtask(task_id: int, title: str, session: Session = Depends(get_session)):
-    task = session.get(Task, task_id)
-    if not task:
-        raise HTTPException(status_code=404, detail="Task not found")
-
-    subtask = Subtask(title=title, task_id=task_id)
-    session.add(subtask)
-    session.commit()
-    session.refresh(subtask)
-    return subtask
-
-@app.patch("/subtasks/{subtask_id}/complete/")
-def complete_subtask(subtask_id: int, session: Session = Depends(get_session)):
-    subtask = session.get(Subtask, subtask_id)
-    if not subtask:
-        raise HTTPException(status_code=404, detail="Subtask not found")
-
-    subtask.completed = True
-    session.commit()
-    return {"message": "Subtask marked as completed"}
+    task: Optional[Task] = Relationship(back_populates="subtasks")
