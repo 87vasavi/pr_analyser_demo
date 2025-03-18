@@ -1,12 +1,19 @@
 from src.models import Task, TaskStatus
+from datetime import date
+from typing import Dict
 
-# Simulated database (Dictionary)
-task_db = {}
+# Simulated database
+task_db: Dict[int, Task] = {}
 task_counter = 1
 
-def add_task(title: str, description: str):
+def add_task(title: str, description: str, due_date: Optional[date] = None):
     global task_counter
-    task = Task(id=task_counter, title=title, description=description)
+
+    # Validate due date
+    if due_date and due_date < date.today():
+        raise ValueError("Due date cannot be in the past.")
+
+    task = Task(id=task_counter, title=title, description=description, due_date=due_date)
     task_db[task_counter] = task
     task_counter += 1
     return task
@@ -16,6 +23,3 @@ def get_task(task_id: int):
 
 def get_all_tasks():
     return list(task_db.values())
-
-def add_tasks(task1, task2):
-    return task1+task2
