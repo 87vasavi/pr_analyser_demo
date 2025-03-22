@@ -1,4 +1,4 @@
-from src.models import Task, TaskStatus
+from models import Task, TaskStatus
 from datetime import date
 from typing import Dict
 
