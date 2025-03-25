@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from src.models import Task, TaskStatus
-from src.utils import add_task, get_task, get_all_tasks
+from src.utils import add_task, get_task, get_all_tasks, update_task
 
 app = FastAPI(title="Task Management API", description="API for managing tasks")
 
