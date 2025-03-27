@@ -2,6 +2,7 @@ from models import Task, TaskStatus
 from datetime import date
 from typing import Dict
 
+
 # Simulated database
 task_db: Dict[int, Task] = {}
 task_counter = 1
