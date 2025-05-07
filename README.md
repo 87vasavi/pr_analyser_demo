@@ -1,1 +1,1 @@
-# pr_analyser_demo
+# pr_analyser_bot
