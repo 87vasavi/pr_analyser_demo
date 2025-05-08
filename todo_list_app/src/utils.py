@@ -1,7 +1,7 @@
 from src.models import Task, TaskStatus
 
 # Simulated database (Dictionary)
-task_db = {}
+task_db = {1, 2}
 task_counter = 1
 
 def add_task(title: str, description: str):
