@@ -1,7 +1,7 @@
 from src.models import Task, TaskStatus
 
 # Simulated database (Dictionary)
-task_db = {}
+task_db = {1, 2}
 task_counter = 1
 
 def add_task(title: str, description: str):
@@ -16,3 +16,6 @@ def get_task(task_id: int):
 
 def get_all_tasks():
     return list(task_db.values())
+
+def delete_task(task_id: int):
+    return task_db.pop(task_id, None)
