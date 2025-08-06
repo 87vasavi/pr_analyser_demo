@@ -16,3 +16,18 @@ def get_task(task_id: int):
 
 def get_all_tasks():
     return list(task_db.values())
+
+def delete_task(task_id: int):
+    """
+    Delete a task by its ID.
+    
+    Args:
+        task_id (int): The ID of the task to delete
+        
+    Returns:
+        bool: True if task was deleted successfully, False if task not found
+    """
+    if task_id in task_db:
+        del task_db[task_id]
+        return True
+    return False
