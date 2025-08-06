@@ -4,7 +4,7 @@ from src.models import Task, TaskStatus
 task_db = {}
 task_counter = 1
 
-def add_task(title: str, description: str):
+def add_task(title: str, description: str = None):
     global task_counter
     task = Task(id=task_counter, title=title, description=description)
     task_db[task_counter] = task
