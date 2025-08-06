@@ -23,3 +23,22 @@ def retrieve_task(task_id: int):
 def create_task(title: str, description: str):
     task = add_task(title, description)
     return task
+
+@app.delete("/tasks/{task_id}", tags=["Tasks"])
+def delete_task_endpoint(task_id: int):
+    """
+    Delete a task by its ID.
+    
+    Args:
+        task_id (int): The ID of the task to delete
+        
+    Returns:
+        dict: Success message if task was deleted
+        
+    Raises:
+        HTTPException: 404 if task not found
+    """
+    if delete_task(task_id):
+        return {"message": f"Task {task_id} deleted successfully"}
+    else:
+        raise HTTPException(status_code=404, detail="Task not found")
